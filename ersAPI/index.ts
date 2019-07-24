@@ -4,6 +4,7 @@ import { userRouter } from './src/routers/userrouter';
 //import { reimbursementRouter } from './src/routers/reimbursementrouter';
 import { sessionMiddleware } from './src/middleware/sessionmiddleware';
 import { authRouter } from './src/routers/authrouter';
+import { reimbursementRouter } from './src/routers/reimbursementrouter';
 
 // specify the port will run on
 const port = process.env.PORT || 8012;
@@ -31,7 +32,7 @@ app.use(sessionMiddleware);
  * Register Routers
  ******************************************/
 app.use('/users', userRouter);
-//app.use('/reimbursement', reimbursementRouter);
+app.use('/reimbursements', reimbursementRouter); // requests sent here from Postman
 app.use(authRouter);
 
 app.listen(port, () => {

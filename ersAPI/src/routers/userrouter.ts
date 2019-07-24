@@ -35,10 +35,9 @@ userRouter.get('/:id', //[
    * method: PATCH
    * allowed role: admin
    */
-userRouter.patch('', [
+userRouter.patch('', //[
    //authMiddleware('Admin'), //only admin have access
     async (req, res) => {
-      
         const user = await userDao.updateUser(req.body);
       res.json(user);
-  }]);
+  });

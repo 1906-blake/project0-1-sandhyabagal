@@ -3,20 +3,22 @@ import { connectionPool } from '../utils/connectionutil';
 import { convertSqlReimbursement } from '../utils/reimbursementconverter';
 import { Reimbursement } from '../models/reimbursement';
 
-export async function findReimbursementByStatusId(statusid: number): Promise<Reimbursement[]>  {
+export async function findReimbursementByStatusId(statusid: number)  {
     let client: PoolClient;
     try {
         client = await connectionPool.connect();
         const queryString = `
         SELECT r.*, rs.status, rt.retype, u.username, u.pass, u.firstname, u.lastname, u.email, ru.*
         FROM reimbursement r
-            JOIN reimbursement_status rs USING (statusid)
-            JOIN reimbursement_type rt USING (typeid)
-            JOIN api_user u ON (author = userid)
-            JOIN role_user ru ON (u.roleid = ru.roleid)
-        WHERE statusid = $1
+            LEFT JOIN reimbursement_status rs ON r.status = rs.statusid
+            LEFT JOIN reimbursement_type rt ON r.type = rt.typeid
+            LEFT JOIN api_user u ON (author = userid)
+            LEFT JOIN role_user ru ON (u.roleid = ru.roleid)
+        WHERE rs.statusid = $1
             `;
         const result = await client.query(queryString, [statusid]);
+
+        console.log(result.rows);
         return result.rows.map(convertSqlReimbursement);
     } catch (err) {
         console.log(err);
@@ -26,17 +28,17 @@ export async function findReimbursementByStatusId(statusid: number): Promise<Rei
     return undefined;
 }
 
-export async function findReimbursementByAuthor(userid: number): Promise<Reimbursement[]> {
+export async function findReimbursementByAuthor(userid: number) {
     let client: PoolClient;
     try {
         client = await connectionPool.connect();
         const queryString = `
         SELECT r.*, rs.status, rt.retype, u.username, u.pass, u.firstname, u.lastname, u.email, ru.*
         FROM reimbursement r
-            JOIN reimbursement_status rs USING (statusid)
-            JOIN reimbursement_type rt USING (typeid)
-            JOIN api_user u ON (author = userid)
-            JOIN role_user ru ON (u.roleid = ru.roleid)
+            LEFT JOIN reimbursement_status rs ON r.status = rs.statusid
+            LEFT JOIN reimbursement_type rt ON r.type = rt.typeid
+            LEFT JOIN api_user u ON (author = userid)
+            LEFT JOIN role_user ru ON (u.roleid = ru.roleid)
         WHERE statusid = $1
             `;
         const result = await client.query(queryString, [userid]);
@@ -54,12 +56,16 @@ export async function findReimbursementById(userid: number) {
     try {
         client = await connectionPool.connect();
         const queryString = `
-        SELECT r.*, rs.status, rt.retype, u.username, u.pass, u.firstname, u.lastname, u.email, ru.*
-        FROM reimbursement r
-            JOIN reimbursement_status rs USING (statusid)
-            JOIN reimbursement_type rt USING (typeid)
-            JOIN api_user u ON (author = userid)
-            JOIN role_user ru ON (u.roleid = ru.roleid)
+        SELECT r.*, u.userid, u.firstname, u.lastname, u.roleid, e.userid as resolver_userid,
+            e.firstname as resolver_first_name, e.lastname as resolver_last_name,
+            e.roleid as resolver_role_id, s.status as status_name, t.type as type_name
+            FROM reimbursement r
+            INNER JOIN api_user u ON (r.author = u.userid)
+            JOIN api_user e ON (r.resolver = e.userid)
+            JOIN reimbursement_status s ON (r.status = s.status_id)
+            JOIN reimbursement_type t ON (r.type = t.typeid)
+            JOIN role_user l ON (u.roleid = l.roleid)
+            JOIN role_user o ON (e.roleid = o.roleid)
         WHERE statusid = $1
             `;
         const result = await client.query(queryString, [userid]);
@@ -73,7 +79,7 @@ export async function findReimbursementById(userid: number) {
     return undefined;
 }
 
-export async function createReimbursement(reimbursement: Reimbursement): Promise<Reimbursement> {
+export async function createReimbursement(reimbursement: Reimbursement) {
     let client: PoolClient;
     try {
         client = await connectionPool.connect();
@@ -82,8 +88,8 @@ export async function createReimbursement(reimbursement: Reimbursement): Promise
                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
                 RETURNING reimbursementid
         `;
-        const result =  [reimbursement.author.userId, reimbursement.amount, reimbursement.resolver && reimbursement.resolver.userid,
-        reimbursement.datesubmitted, reimbursement.dateresolved, reimbursement.description, reimbursement.status.statusid, reimbursement.type.typeid];
+        const result =  [reimbursement.author, reimbursement.amount, reimbursement.resolver && reimbursement.resolver,
+        reimbursement.datesubmitted, reimbursement.dateresolved, reimbursement.description, reimbursement.status, reimbursement.type];
 
         const newid = await client.query(queryString, result);
         const sqlReimbursement = newid.rows[0].reimbursementid;
@@ -98,7 +104,7 @@ export async function createReimbursement(reimbursement: Reimbursement): Promise
     return undefined;
 }
 
-export async function updateReimbursement(reimbursement: Reimbursement): Promise<Reimbursement> {
+export async function updateReimbursement(reimbursement: Reimbursement) {
     const oldReimbursement = await findReimbursementById(reimbursement.reimbursementid);
     if (!oldReimbursement) {
         return undefined;
@@ -115,7 +121,7 @@ export async function updateReimbursement(reimbursement: Reimbursement): Promise
                                     description = $6, statusid = $7, typeid = $8
                 WHERE reimbursementid = $9
         `;
-        const constraints = [reimbursement.author.userid, reimbursement.amount, reimbursement.resolver && reimbursement.resolver.userid,
+        const constraints = [reimbursement.author.userid, reimbursement.amount, reimbursement.resolver && reimbursement.resolver,
             reimbursement.datesubmitted, reimbursement.dateresolved, reimbursement.description, reimbursement.status,
             reimbursement.type && reimbursement.type, reimbursement.reimbursementid];
         await client.query(queryString, constraints);

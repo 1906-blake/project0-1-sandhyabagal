@@ -1,5 +1,5 @@
 import express from 'express';
-import { authMiddleware } from '../middleware/authmiddleware';
+//import { authMiddleware } from '../middleware/authmiddleware';
 import * as reimbursementDao from '../daos/sqlreimbursementdao';
 
 export const reimbursementRouter = express.Router();
@@ -13,7 +13,7 @@ export const reimbursementRouter = express.Router();
 reimbursementRouter.get('/status/:statusid', [
    //authMiddleware('Admin', 'Finance Manager'), //can have access
     async (req, res) => {
-        let statusid = req.params.statusId;
+        let statusid = req.params.statusid;
         const reimbursements = await reimbursementDao.findReimbursementByStatusId(statusid);
         res.json(reimbursements); // sends info to userDao
     }]);
@@ -25,7 +25,7 @@ reimbursementRouter.get('/status/:statusid', [
   * allowed role: finance manager or if ther userId is the user making the request.
   */
 reimbursementRouter.get('/author/userid/:userid', [
-    authMiddleware('Admin','Finance Manager'),
+   // authMiddleware('Admin','Finance Manager'),
     async (req, res) => {
         let userid = req.params.userid;
         const reimbursement = await reimbursementDao.findReimbursementByAuthor(userid);
@@ -38,7 +38,7 @@ reimbursementRouter.get('/author/userid/:userid', [
    * allowed role: reimbursementid should be 0
    */
 reimbursementRouter.post('', [
-   authMiddleware('Admin'),
+  // authMiddleware('Admin'),
     async (req, res) => {
         let userid = req.body;
         const user = await reimbursementDao.createReimbursement(userid);
@@ -50,10 +50,10 @@ reimbursementRouter.post('', [
    * method: PATCH
    * allowed role: finance manager
    */
-  reimbursementRouter.patch('', [
-    authMiddleware('Admin'),
+  reimbursementRouter.patch('', //[
+   // authMiddleware('Admin'),
     async (req, res) => {
         const reimbursement = req.body;
         const reimbursementUpdate = await reimbursementDao.updateReimbursement(reimbursement);
         res.json(reimbursementUpdate);
-  }]);
+  });

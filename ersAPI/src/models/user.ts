@@ -1,6 +1,6 @@
 import { Role } from './role';
 
-export default class User {
+export class User {
     constructor(
        public userid: number, // primary key
        public username: string, // not null, unique
@@ -11,3 +11,5 @@ export default class User {
        public roleid: Role // not null
     ) {}
 }
+
+export default User;
