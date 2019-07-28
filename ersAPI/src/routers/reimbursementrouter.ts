@@ -1,5 +1,5 @@
 import express from 'express';
-//import { authMiddleware } from '../middleware/authmiddleware';
+import { authMiddleware } from '../middleware/authmiddleware';
 import * as reimbursementDao from '../daos/sqlreimbursementdao';
 
 export const reimbursementRouter = express.Router();
@@ -11,7 +11,7 @@ export const reimbursementRouter = express.Router();
  * allowed role: finance manager
  */
 reimbursementRouter.get('/status/:statusid', [
-   //authMiddleware('Admin', 'Finance Manager'), //can have access
+   authMiddleware(1, 2), //can have access
     async (req, res) => {
         let statusid = req.params.statusid;
         const reimbursements = await reimbursementDao.findReimbursementByStatusId(statusid);
@@ -25,7 +25,7 @@ reimbursementRouter.get('/status/:statusid', [
   * allowed role: finance manager or if ther userId is the user making the request.
   */
 reimbursementRouter.get('/author/userid/:userid', [
-   // authMiddleware('Admin','Finance Manager'),
+   authMiddleware(1, 2),
     async (req, res) => {
         let userid = req.params.userid;
         const reimbursement = await reimbursementDao.findReimbursementByAuthor(userid);
@@ -37,22 +37,23 @@ reimbursementRouter.get('/author/userid/:userid', [
    * method: POST
    * allowed role: reimbursementid should be 0
    */
-reimbursementRouter.post('', [
-  // authMiddleware('Admin'),
-    async (req, res) => {
-        let userid = req.body;
-        const user = await reimbursementDao.createReimbursement(userid);
-        res.json(user);
-  }]);
+reimbursementRouter.post('', 
+   authMiddleware(1),
+    async (req, res) => { // creating a reimbursement
+        console.log("Created Post");
+        const create = await reimbursementDao.createReimbursement(req.body);
+        res.json(create);
+  });
  /**
    * endpoint 4: update reimbursement
    * url: /reimbursements
    * method: PATCH
    * allowed role: finance manager
    */
-  reimbursementRouter.patch('', //[
-   // authMiddleware('Admin'),
+  reimbursementRouter.patch('', // updating reimbursement
+   authMiddleware(1),
     async (req, res) => {
+        console.log("Updated reimbursement");
         const reimbursement = req.body;
         const reimbursementUpdate = await reimbursementDao.updateReimbursement(reimbursement);
         res.json(reimbursementUpdate);

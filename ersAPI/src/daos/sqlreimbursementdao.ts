@@ -1,6 +1,7 @@
 import { PoolClient } from 'pg';
 import { connectionPool } from '../utils/connectionutil';
 import { convertSqlReimbursement } from '../utils/reimbursementconverter';
+import { convertSqlReimbursement2 } from '../utils/reimbursementconverter';
 import { Reimbursement } from '../models/reimbursement';
 
 export async function findReimbursementByStatusId(statusid: number)  {
@@ -56,21 +57,17 @@ export async function findReimbursementById(userid: number) {
     try {
         client = await connectionPool.connect();
         const queryString = `
-        SELECT r.*, u.userid, u.firstname, u.lastname, u.roleid, e.userid as resolver_userid,
-            e.firstname as resolver_first_name, e.lastname as resolver_last_name,
-            e.roleid as resolver_role_id, s.status as status_name, t.type as type_name
-            FROM reimbursement r
-            INNER JOIN api_user u ON (r.author = u.userid)
-            JOIN api_user e ON (r.resolver = e.userid)
-            JOIN reimbursement_status s ON (r.status = s.status_id)
-            JOIN reimbursement_type t ON (r.type = t.typeid)
-            JOIN role_user l ON (u.roleid = l.roleid)
-            JOIN role_user o ON (e.roleid = o.roleid)
-        WHERE statusid = $1
+        SELECT *
+	FROM reimbursement r
+	JOIN reimbursement_type t ON (r.type = t.typeid)
+	JOIN reimbursement_status s ON (r.status = s.statusid)
+	INNER JOIN api_user u ON (r.author = u.userid)
+    LEFT JOIN res_view v ON (r.resolver = v.res_id)
+	WHERE reimbursementid = $1
             `;
         const result = await client.query(queryString, [userid]);
         const sqlReimbursement = result.rows[0];
-        return convertSqlReimbursement(sqlReimbursement);
+        return convertSqlReimbursement2(sqlReimbursement);
     } catch (err) {
         console.log(err);
     } finally {
@@ -84,12 +81,12 @@ export async function createReimbursement(reimbursement: Reimbursement) {
     try {
         client = await connectionPool.connect();
         const queryString = `
-            INSERT INTO reimbursement (author, amount, resolver, datesubmitted, dateresolved, description, statusid, typeid)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
+            INSERT INTO reimbursement (author, amount, resolver, datesubmitted, description, status, type)
+                VALUES ($1, $2, $3, $4, $5, $6, $7) 
                 RETURNING reimbursementid
         `;
         const result =  [reimbursement.author, reimbursement.amount, reimbursement.resolver && reimbursement.resolver,
-        reimbursement.datesubmitted, reimbursement.dateresolved, reimbursement.description, reimbursement.status, reimbursement.type];
+        reimbursement.datesubmitted, reimbursement.description, reimbursement.status, reimbursement.type];
 
         const newid = await client.query(queryString, result);
         const sqlReimbursement = newid.rows[0].reimbursementid;
@@ -105,8 +102,12 @@ export async function createReimbursement(reimbursement: Reimbursement) {
 }
 
 export async function updateReimbursement(reimbursement: Reimbursement) {
+    console.log('1');
     const oldReimbursement = await findReimbursementById(reimbursement.reimbursementid);
+    console.log('2');
+    console.log(oldReimbursement);
     if (!oldReimbursement) {
+        console.log('3');
         return undefined;
     }
     reimbursement = {
@@ -116,14 +117,18 @@ export async function updateReimbursement(reimbursement: Reimbursement) {
     let client: PoolClient;
     try {
         client = await connectionPool.connect();
+        console.log('does it work?');
         const queryString = `
-            UPDATE reimbursement SET author = $1, amount = $2, resolver = $3, datesubmitted = $4, dateresolved = $5,
-                                    description = $6, statusid = $7, typeid = $8
-                WHERE reimbursementid = $9
+            UPDATE reimbursement SET author = $1, amount = $2, datesubmitted = $3, dateresolved = $4,
+                                description = $5, resolver = $6, status = $7, type = $8
+            WHERE reimbursementid = $9
+            RETURNING *
         `;
-        const constraints = [reimbursement.author.userid, reimbursement.amount, reimbursement.resolver && reimbursement.resolver,
-            reimbursement.datesubmitted, reimbursement.dateresolved, reimbursement.description, reimbursement.status,
-            reimbursement.type && reimbursement.type, reimbursement.reimbursementid];
+
+
+        const constraints = [reimbursement.author, reimbursement.amount, 
+            reimbursement.datesubmitted, reimbursement.dateresolved, reimbursement.description, reimbursement.resolver, reimbursement.status,
+            reimbursement.type, reimbursement.reimbursementid];
         await client.query(queryString, constraints);
 
         const sqlReimbursement = await findReimbursementById(reimbursement.reimbursementid);

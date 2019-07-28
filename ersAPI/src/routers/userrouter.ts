@@ -1,5 +1,5 @@
 import express from 'express';
-//import { authMiddleware } from '../middleware/authmiddleware';
+import { authMiddleware } from '../middleware/authmiddleware';
 import * as userDao from '../daos/sqluserdao';
 
 export const userRouter = express.Router();
@@ -11,7 +11,7 @@ export const userRouter = express.Router();
  * allowed role: finance manager
  */
 userRouter.get('', [
-   // authMiddleware('Finance Manager', 'Admin'), //can have access // ask blake why
+  authMiddleware(1, 2), //can have access
     async (req, res) => {
         const users = await userDao.findAll();
         res.json(users); // sends info to userDao
@@ -23,8 +23,8 @@ userRouter.get('', [
   * method: GET
   * allowed role: finance manager or the ID provided matches the ID of thw current user
   */
-userRouter.get('/:id', //[
-   //authMiddleware('Finance Manager', 'Admin'),
+userRouter.get('/:id',
+   authMiddleware(1, 2),
     async (req, res) => {
         const user = await userDao.findById(+req.params.id);
         res.json(user);
@@ -35,8 +35,8 @@ userRouter.get('/:id', //[
    * method: PATCH
    * allowed role: admin
    */
-userRouter.patch('', //[
-   //authMiddleware('Admin'), //only admin have access
+userRouter.patch('', 
+   authMiddleware(1), //only admin have access
     async (req, res) => {
         const user = await userDao.updateUser(req.body);
       res.json(user);

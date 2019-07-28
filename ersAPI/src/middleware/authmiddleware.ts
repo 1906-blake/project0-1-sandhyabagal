@@ -1,10 +1,15 @@
-export const authMiddleware = (...roles) => (req, res, next) => {
+/**
+ * 
+ * @param role 
+ */
+
+export const authMiddleware = (...role) => (req, res, next) => {
     if (req.session.user) {
-        // console.log('current user = ', req.session.user);
-        if (roles.includes(req.session.user.role.role)) {
+        console.log('current user = ', req.session.user.roleid); //setting the authMiddleware role restriction to the numeric roleid values
+        if (role.includes(req.session.user.roleid)) {
             const userId = req.body.id;
             const currentLoggedInUser = req.session.user;
-           if (roles.includes(req.session.user.role.role) || (currentLoggedInUser.id === userId)) {
+           if (role.includes(req.session.user.roleid) || (currentLoggedInUser.id === userId)) {
                next();
            }
         } else {

@@ -1,7 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import { userRouter } from './src/routers/userrouter';
-//import { reimbursementRouter } from './src/routers/reimbursementrouter';
 import { sessionMiddleware } from './src/middleware/sessionmiddleware';
 import { authRouter } from './src/routers/authrouter';
 import { reimbursementRouter } from './src/routers/reimbursementrouter';

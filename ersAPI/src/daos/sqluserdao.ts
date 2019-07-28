@@ -2,7 +2,6 @@ import { connectionPool } from '../utils/connectionutil';
 import { PoolClient } from 'pg';
 import { convertSqlUser } from '../utils/userconverter';
 import User from '../models/user';
-import { authMiddleware } from '../middleware/authmiddleware';
 
 // login
 export async function findByUsernameAndPassword(username: string, password: string) {
@@ -28,7 +27,6 @@ export async function findByUsernameAndPassword(username: string, password: stri
 
 // find user
 export async function findAll() {
-    authMiddleware('Admin', 'Finance Manager');
     console.log('finding all users');
     let client: PoolClient;
     try {
