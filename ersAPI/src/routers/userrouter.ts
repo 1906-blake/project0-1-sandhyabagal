@@ -11,7 +11,7 @@ export const userRouter = express.Router();
  * allowed role: finance manager
  */
 userRouter.get('', [
-  authMiddleware(1, 2), //can have access
+ // authMiddleware(1, 2), //can have access
     async (req, res) => {
         const users = await userDao.findAll();
         res.json(users); // sends info to userDao
@@ -24,7 +24,7 @@ userRouter.get('', [
   * allowed role: finance manager or the ID provided matches the ID of thw current user
   */
 userRouter.get('/:id',
-   authMiddleware(1, 2),
+  // authMiddleware(1, 2),
     async (req, res) => {
         const user = await userDao.findById(+req.params.id);
         res.json(user);

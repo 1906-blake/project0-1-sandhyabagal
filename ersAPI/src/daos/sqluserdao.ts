@@ -31,7 +31,7 @@ export async function findAll() {
     let client: PoolClient;
     try {
         client = await connectionPool.connect();
-        const result = await client.query('SELECT * FROM api_user');
+        const result = await client.query('SELECT * FROM api_user ORDER BY userid ASC');
         // convert result from sql object to js object
         return result.rows.map(convertSqlUser);
     } catch (err) {
@@ -71,7 +71,7 @@ export async function save(user: User) {
     try {
         client = await connectionPool.connect(); // basically .then is everything after this
         const queryString = `
-            INSERT INTO app_user (username, pass, firstname, lastname, email, roleid)
+            INSERT INTO api_user (username, pass, firstname, lastname, email, roleid)
             VALUES 	($1, $2, $3, $4, $5, $6, $7)
             RETURNING userid
         `;

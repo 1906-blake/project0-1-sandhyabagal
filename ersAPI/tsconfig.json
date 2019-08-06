@@ -15,7 +15,8 @@
       "strictNullChecks": false,
       "suppressImplicitAnyIndexErrors": true,
       "noUnusedLocals": true,
-      "esModuleInterop": true
+      "esModuleInterop": true,
+      "jsx": "react"
     },
     "exclude": [
       "node_modules",

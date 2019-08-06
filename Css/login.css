@@ -1,0 +1,21 @@
+h1 {
+    text-align: center;
+    text-decoration: underline;
+    margin: 24px; /* adds space around the text */
+    color: aqua;
+}
+body {
+    background-color:purple;
+}
+.container {
+    background-color: white;
+    padding-top: 15px;
+}
+.container-button {
+    padding: 25px;
+}
+#footer {
+    color: white;
+    text-align: center;
+    padding-top: 10em;
+}

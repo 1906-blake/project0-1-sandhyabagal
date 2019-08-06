@@ -51,7 +51,7 @@ reimbursementRouter.post('',
    * allowed role: finance manager
    */
   reimbursementRouter.patch('', // updating reimbursement
-   authMiddleware(1),
+   authMiddleware(1,2),
     async (req, res) => {
         console.log("Updated reimbursement");
         const reimbursement = req.body;
