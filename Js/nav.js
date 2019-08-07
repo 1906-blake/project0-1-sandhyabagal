@@ -5,7 +5,7 @@ nav.innerHTML = `
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" href="#">Home</a>
+                <a class="nav-link" href="../Html/profile.html">Profile</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="../Html/user.html">Users</a>

@@ -1,13 +1,48 @@
-console.log("hello");
+function setApproved() {
+    viewByStatus('1');
+};
+function setPending() {
+    viewByStatus('2');
+};
+function setDenied() {
+    viewByStatus('3');
+};
+const tableContainer = document.getElementById('display-reimb');
+const reimbody = tableContainer.childNodes[3];
+
+async function viewByStatus(statusid) { //view reimbursements by status endpoint
+    try {
+    const resp = await fetch(`http://localhost:8012/reimbursements/status/${statusid}`, {
+        method: 'GET',
+        credentials: 'include'
+    });
+    const reimbursements = await resp.json();
+    console.log(reimbursements);
+    reimbody.innerHTML = '';
+    reimbursements.forEach(addReimbursement);
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function viewReimbursements() { 
+    const resp = await fetch(`http://localhost:8012/reimbursements/author/userid/${1}`, {
+        credentials: 'include'
+    });
+
+    const reimbursement = await resp.json();
+    console.log(reimbursement);
+    reimbursement.forEach(addReimbursement);
+}
 
 function addReimbursement(reimbursement) {
-    const reimbody = document.getElementById('reimb-body');
-    const row = document.createElement('tr');
-    reimbody.appendChild(row);
+    if(!reimbursement) {
+        return;
+    }
 
-    const reimbId = document.createElement('td');
-    reimbId.innerText = reimbursement.reimbursementid;
-    row.appendChild(reimbId);
+    const row = document.createElement('tr');
+    row.setAttribute('data-id', reimbursement.reimbursementid);
+    reimbody.appendChild(row);
 
     const author = document.createElement('td');
     author.innerText = reimbursement.author;
@@ -22,7 +57,7 @@ function addReimbursement(reimbursement) {
     row.appendChild(datesubmitted);
 
     const dateresolved = document.createElement('td');
-    dateresolved.innerText = reimbursement.dateresolved;
+    dateresolved.innerText = reimbursement.dateresolved ? reimbursement.dateresolved : '~';
     row.appendChild(dateresolved);
 
     const description = document.createElement('td');
@@ -30,7 +65,7 @@ function addReimbursement(reimbursement) {
     row.appendChild(description);
 
     const resolver = document.createElement('td');
-    resolver.innerText = reimbursement.resolver;
+    resolver.innerText = reimbursement.resolver && reimbursement.resolver;
     row.appendChild(resolver);
 
     const reimbstatus = document.createElement('td');
@@ -38,16 +73,6 @@ function addReimbursement(reimbursement) {
     row.appendChild(reimbstatus);
 
     const reimbtype = document.createElement('td');
-    reimbtype.innerText = reimbursement.type.type;
+    reimbtype.innerText = reimbursement.type;
     row.appendChild(reimbtype);
 };
-
-function viewReimbursements() {
-    const resp = await fetch('http://localhost:8012/reimbursements', {
-        credentials: 'include'
-    });
-    const reimbursements = await resp.json();
-    console.log(reimbursements);
-    reimbursements.forEach(addReimbursement);
-}
-viewReimbursements();``

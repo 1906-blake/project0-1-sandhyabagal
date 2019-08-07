@@ -7,6 +7,7 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- My CSS -->
     <link rel="stylesheet" href="./Css/reimbursement.css">
     <title>Reimbursements</title>
   </head>
@@ -14,12 +15,33 @@
     <nav id="app-nav"></nav>
 
     <h1>Reimbursements!</h1>
+    <div class="findReimbursement-container">
+        <button class="btn btn-dark" id="allreimbursements" onclick="viewReimbursements()">View My Reimbursements</button>
+        <p id="error-message"></p>
+    </div>
+
+  <!-- <div class="input-group mb-3">
+      <input type="text" class="form-control" placeholder="Author Id" id='authorId'>
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary" type="button" id='authorIdButton'> Author </button>
+      </div>
+  </div> -->
+
+  <div class="status-dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="statuses" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        View Reimbursement by Status
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" href="#" onclick="setApproved()">Approved</a>
+        <a class="dropdown-item" href="#" onclick="setPending()">Pending</a>
+        <a class="dropdown-item" href="#" onclick="setDenied()">Denied</a>
+      </div>
+    </div>
 
     <div id="reimbursement-table-container">
-      <table class="display-reimb">
+      <table id="display-reimb">
         <thead class="thead-dark">
           <tr>
-            <th scope="col">Reimbursement ID</th>
             <th scope="col">Author</th>
             <th scope="col">Amount</th>
             <th scope="col">Date Submitted</th>
@@ -34,11 +56,13 @@
       </table>
     </div>
 
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+   <!-- My JS -->
     <script src="../Js/nav.js"></script>
     <script src="../Js/reimbursement.js"></script>
   </body>

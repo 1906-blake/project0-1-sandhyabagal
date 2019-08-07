@@ -20,7 +20,7 @@ async function login(event) {
         const user = await resp.json();
         
         localStorage.setItem('user', JSON.stringify(user));
-        window.location = './user.html'; // navigate page to reimbursement table
+        window.location = './profile.html'; // navigate page to home profile page
     } catch (err) {
         console.log(err);
         console.log('invalid credentials')

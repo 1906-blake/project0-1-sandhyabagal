@@ -57,7 +57,7 @@ export async function findReimbursementById(userid: number) {
     try {
         client = await connectionPool.connect();
         const queryString = `
-        SELECT *
+    SELECT *
 	FROM reimbursement r
 	JOIN reimbursement_type t ON (r.type = t.typeid)
 	JOIN reimbursement_status s ON (r.status = s.statusid)
@@ -120,7 +120,7 @@ export async function updateReimbursement(reimbursement: Reimbursement) {
         console.log('does it work?');
         const queryString = `
             UPDATE reimbursement SET author = $1, amount = $2, datesubmitted = $3, dateresolved = $4,
-                                description = $5, resolver = $6, status = $7, type = $8
+                description = $5, resolver = $6, status = $7, type = $8
             WHERE reimbursementid = $9
             RETURNING *
         `;

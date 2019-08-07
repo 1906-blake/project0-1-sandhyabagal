@@ -1,4 +1,4 @@
-function addUserRow(user) {
+function addUserRow(user) { // adding all users info into table body from sql
     if(!user) {
         return;
     }
@@ -31,7 +31,7 @@ function addUserRow(user) {
     row.appendChild(roleData);
 };
 
-async function getAllUsers() {
+async function getAllUsers() { //view all users endpoint
     const resp = await fetch('http://localhost:8012/users', {
         method: 'GET',
         credentials: 'include'
