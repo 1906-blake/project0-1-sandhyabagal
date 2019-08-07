@@ -7,6 +7,15 @@ function setPending() {
 function setDenied() {
     viewByStatus('3');
 };
+function sandyReimb() {
+    viewReimb('1');
+}
+function alReimb() {
+    viewReimb('2');
+}
+function botReimb() {
+    viewReimb('3');
+}
 const tableContainer = document.getElementById('display-reimb');
 const reimbody = tableContainer.childNodes[3];
 
@@ -33,6 +42,21 @@ async function viewReimbursements() {
     const reimbursement = await resp.json();
     console.log(reimbursement);
     reimbursement.forEach(addReimbursement);
+}
+
+async function viewReimb(userid) { //view reimbursements by employee endpoint
+    try {
+    const resp = await fetch(`http://localhost:8012/reimbursements/author/userid/${userid}`, {
+        method: 'GET',
+        credentials: 'include'
+    });
+    const reimbursements = await resp.json();
+    console.log(reimbursements);
+    reimbody.innerHTML = '';
+    reimbursements.forEach(addReimbursement);
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 function addReimbursement(reimbursement) {

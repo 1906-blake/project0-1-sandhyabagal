@@ -20,13 +20,6 @@
         <p id="error-message"></p>
     </div>
 
-  <!-- <div class="input-group mb-3">
-      <input type="text" class="form-control" placeholder="Author Id" id='authorId'>
-      <div class="input-group-append">
-        <button class="btn btn-outline-secondary" type="button" id='authorIdButton'> Author </button>
-      </div>
-  </div> -->
-
   <div class="status-dropdown">
       <button class="btn btn-secondary dropdown-toggle" type="button" id="statuses" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         View Reimbursement by Status
@@ -36,6 +29,16 @@
         <a class="dropdown-item" href="#" onclick="setPending()">Pending</a>
         <a class="dropdown-item" href="#" onclick="setDenied()">Denied</a>
       </div>
+    </div>
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+           View Reimbursements by Employee
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="#" onclick="sandyReimb()">sandhyabagal</a>
+          <a class="dropdown-item" href="#" onclick="alReimb()">alwilson</a>
+          <a class="dropdown-item" href="#" onclick="botReimb()">botto</a>
+        </div>
     </div>
 
     <div id="reimbursement-table-container">
@@ -55,8 +58,9 @@
         <tbody id="reimb-body"></tbody>
       </table>
     </div>
-
-
+<br><br>
+    <h2>Submit a Reimbursement</h2>
+    
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

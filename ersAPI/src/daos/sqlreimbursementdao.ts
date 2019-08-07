@@ -40,7 +40,7 @@ export async function findReimbursementByAuthor(userid: number) {
             LEFT JOIN reimbursement_type rt ON r.type = rt.typeid
             LEFT JOIN api_user u ON (author = userid)
             LEFT JOIN role_user ru ON (u.roleid = ru.roleid)
-        WHERE statusid = $1
+        WHERE userid = $1
             `;
         const result = await client.query(queryString, [userid]);
         return result.rows.map(convertSqlReimbursement);
