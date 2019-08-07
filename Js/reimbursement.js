@@ -93,10 +93,53 @@ function addReimbursement(reimbursement) {
     row.appendChild(resolver);
 
     const reimbstatus = document.createElement('td');
-    reimbstatus.innerText = reimbursement.status;
+    if(+reimbursement.status.statusid === 2) {
+        statusData.innerHTML = `
+        <div class="btn-group">
+            <button type="button" id='status-dropdown-${reimbursement.reimbursementid}' class="btn btn-secondary dropdown-toggle"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Pending
+            </button>
+            <div class="dropdown-menu" onclick="updateType(event, ${reimbursement.status.statusid})">
+                <a class="dropdown-item" value='1' >Approved</a>
+                <a class="dropdown-item" value='3' >Denied</a>
+            </div>
+        </div>`;
+    } else {
+        reimbstatus.innerText = reimbursement.status;
+    }
     row.appendChild(reimbstatus);
 
     const reimbtype = document.createElement('td');
     reimbtype.innerText = reimbursement.type;
     row.appendChild(reimbtype);
 };
+
+async function updateType(event, statusid) {
+    console.log(event);
+    const dropdown = document.getElementById(`status-dropdown-${statusid}`);
+    dropdown.innerText = event.target.innerText;
+    const reimbursement = {
+        reimbursementid: id,
+        resolver: {
+            userid: myUser.userid
+        },
+        dateResolved: getCurrentDateTime(),
+        status: {
+            statusid: dropdown.innerText === 'Approved' ? 1 : 3
+        }
+    }
+    try {
+        const resp = await fetch('http://localhost:8012/reimbursements', {
+            method: 'PATCH',
+            credentials: 'include',
+            body: JSON.stringify(reimbursement),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        });
+    } catch (err) {
+        console.log(err);
+    }
+}

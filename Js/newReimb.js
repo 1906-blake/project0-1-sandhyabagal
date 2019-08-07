@@ -9,7 +9,7 @@ async function newReq(e) {
     const newDesc = document.getElementById('subDescription').value;
     const newType = document.getElementById('subType').value;
 
-    const reimbursement = {
+    const reimbursement = { //auto-sets the user submitting the reimbursement
         author: author,
         resolver: null,
         dateresolved: null,
