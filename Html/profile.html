@@ -17,6 +17,15 @@
 
     <div class="edit-user-table">
         <h2>Update User Account</h2>
+        <form onsubmit="updateProfile(event)">
+            <input id="firstName" type="text" placeholder="First Name">
+            <input id="lastName" type="text" placeholder="Last Name">
+
+            <input id="username" type="text" placeholder="Username">
+            <input id="email" type="email" placeholder="Email">
+            <p id="error-message"></p>
+            <button type="submit">Update</button>
+        </form>
            
     </div>
     </body>
@@ -28,3 +37,4 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <!-- My JS -->
     <script src="../Js/nav.js"></script>
+    <script src="../Js/profile.js"></script>

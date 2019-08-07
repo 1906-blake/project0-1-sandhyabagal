@@ -1,5 +1,5 @@
 import express from 'express';
-import { authMiddleware } from '../middleware/authmiddleware';
+//import { authMiddleware } from '../middleware/authmiddleware';
 import * as userDao from '../daos/sqluserdao';
 
 export const userRouter = express.Router();
@@ -36,8 +36,8 @@ userRouter.get('/:id',
    * allowed role: admin
    */
 userRouter.patch('', 
-   authMiddleware(1), //only admin have access
+  // authMiddleware(1), //only admin have access
     async (req, res) => {
-        const user = await userDao.updateUser(req.body);
+      const user = await userDao.updateUser(req.body);
       res.json(user);
   });

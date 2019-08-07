@@ -21,7 +21,7 @@
     </div>
 
   <div class="status-dropdown">
-      <button class="btn btn-secondary dropdown-toggle" type="button" id="statuses" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="reimbByStatus" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         View Reimbursement by Status
       </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -31,7 +31,7 @@
       </div>
     </div>
     <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="reimbByEmployee" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
            View Reimbursements by Employee
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -60,7 +60,33 @@
     </div>
 <br><br>
     <h2>Submit a Reimbursement</h2>
-    
+    <p>Fill out the form to submit a Reimbursement!</p>
+    <form class="reimbSubmitForm" onsubmit="newReq(event)">
+        <div class="reimbSubmit">
+              <label for="amountSubmit">Amount: </label>
+              <input type="number" class="form-control" id="subAmount" placeholder="Ex. 500">
+        </div>
+
+        <div class="reimbSubmit">
+            <label for="descriptionSubmit">Description</label>
+            <input type="text" class="form-control" id="subDescription" placeholder="blah blah blah">
+        </div>
+
+          <div class="form-group">
+              <label for="reimbType">Reimbursement Type</label>
+              <select class="form-control" id="subType">
+                <option value="1">Food</option>
+                <option value="2">Travel</option>
+                <option value="3">Lodging</option>
+                <option value="4">Other</option>
+              </select>
+          </div>
+          <div class="form-group col-md-4">
+              <button type="submit" class="btn btn-primary col-md-8">Submit Reimbursement</button>
+          </div>
+
+    </form>
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -69,5 +95,6 @@
    <!-- My JS -->
     <script src="../Js/nav.js"></script>
     <script src="../Js/reimbursement.js"></script>
+    <script src="../Js/newReimb.js"></script>
   </body>
 </html>

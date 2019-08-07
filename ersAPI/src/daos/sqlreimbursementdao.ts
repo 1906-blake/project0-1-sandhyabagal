@@ -85,7 +85,7 @@ export async function createReimbursement(reimbursement: Reimbursement) {
                 VALUES ($1, $2, $3, $4, $5, $6, $7) 
                 RETURNING reimbursementid
         `;
-        const result =  [reimbursement.author, reimbursement.amount, reimbursement.resolver && reimbursement.resolver,
+        const result =  [reimbursement.author, reimbursement.amount, reimbursement.resolver,
         reimbursement.datesubmitted, reimbursement.description, reimbursement.status, reimbursement.type];
 
         const newid = await client.query(queryString, result);
